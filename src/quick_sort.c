@@ -22,9 +22,9 @@ void quick_sort(int A[], int n){
       j++;
     }
   }
-  quick_sort(A, j-2);
-  A[j-1]=pivot;
-  quick_sort(A+j, n-j+1);
+  quick_sort(A, j);
+  A[j]=pivot;
+  quick_sort(A+j+1, n-j-1);
   return;
 }
 
