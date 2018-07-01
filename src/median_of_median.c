@@ -10,22 +10,58 @@ A[0], A[1], ..., A[n-1] の中でk+1番目に小さい値を返す関数
 ただし、Aの中身は書き換えてしまう。
 */
 int quick_select(int A[], int n, int k){
-  int i, j, pivot;
-
-// 先頭の要素をピボットとする
+  int i, j, tmp,pivot;
+  // 先頭の要素をピボットとする
   pivot = A[0];
-  for(i = j = 1; i < n; i++){
-    if(A[i] <= pivot){
-      int z = A[j];
-      A[j] = A[i];
-      A[i] = z;
-      j++;
+  if(n<=5){
+    for(i = j = 1; i < n; i++){
+      if(A[i] <= pivot){
+        int z = A[j];
+        A[j] = A[i];
+        A[i] = z;
+        j++;
+      }
+    }
+    //printf("p:%d\nn:%d\nj:%d\nk:%d\n\n",pivot,n,j,k);
+    if(j == k+1) return pivot;
+    if(j < k+1) return quick_select(A+j, n-j, k-j);
+    return quick_select(A+1, j-1, k);
+  }else{
+    i = 1;
+    while(5*i < n){
+      tmp = quick_select(A+5*(i-1), 5, 5/2);  //長さ5の部分配列の中で3番目に小さい数(中央値)
+      for(j=0; j<5; j++){                     //配列の左に中央値を詰めていく
+        if(A[5*(i-1)+j] == tmp){
+          tmp = A[i-1];
+          A[i-1] = A[5*(i-1)+j];
+          A[5*(i-1)+j] = tmp;
+          break;
+        }
+      }
+      i++;
+    }
+    tmp = quick_select(A+5*(i-1), n%5, n%5/2);
+    for(j=0; j<n%5; j++){                   //部分配列の先頭にその中央値を置く
+      if(A[5*(i-1)+j] == tmp){
+        tmp = A[i-1];
+        A[i-1] = A[5*(i-1)+j];
+        A[5*(i-1)+j] = tmp;
+        break;
+      }
+    }
+    pivot = quick_select(A, i , i/2);                //各部分配列の中央値でできた長さceil(n/5)の配列の中央値をピボットとして選択
+    for(i = j = 1; i < n; i++){
+      if(A[i] <= pivot){
+        int z = A[j];
+        A[j] = A[i];
+        A[i] = z;
+        j++;
+      }
     }
   }
-
   if(j == k+1) return pivot;
   else if(j < k+1) return quick_select(A+j, n-j, k-j);
-  else return quick_select(A+1, j-1, k);
+  else return quick_select(A+1, j-1, k+1);
 }
 
 int main(){
