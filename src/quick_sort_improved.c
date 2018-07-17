@@ -14,23 +14,25 @@ void quick_sort(int A[], int n){
   if(n<=0) return;
 // 先頭の要素をピボットとする
   pivot = A[0];
-  for(i = j = l = 1; i < n; i++){
-    if(A[i] <= pivot){
-      int z = A[j+l-1];
-      A[j+l-1] = A[i];
-      A[i] = z;
+  for(i = j = 1,l = 0; i < n; i++){
+    if(A[i] < pivot){
+      int z = A[i];
+      A[i] = A[j];
+      A[j] = A[j-l];
+      A[j-l] = z;
       j++;
-      if(A[i] == pivot){
-        l++;
-      }
+    }else if(A[i] == pivot){
+      int z = A[j];
+      A[j] = A[i];
+      A[i] = z;
+      l++;
+      j++;
     }
   }
-  for(i = 0;i < l; i++){
-    int z = A[i];
-    A[i] = A[j-i-1];
-    A[j-i-1]=z;
-  }
-  quick_sort(A, j-l);
+  i = A[0];
+  A[0] = A[j-1];
+  A[j-1] = i;
+  quick_sort(A, j-1-l);
   quick_sort(A+j, n-j);
   return;
 }
@@ -43,10 +45,16 @@ int main(){
     A[i] = (long long int) A[i-1] * A[1] % N;
   }
 
-// すべての要素が同じ場合でも計算が早く終わるか確認する
-
   quick_sort(A, N);
   for(i=0;i<N;i++){
     if(A[i] != i) printf("ERROR %dth element is %d\n", i, A[i]);
   }
+
+// すべての要素が同じ場合でも計算が早く終わるか確認する
+
+  for(i=0;i<N;i++) A[i] = 2;
+  quick_sort(A, N);
+  //for(i=0;i<N;i++) printf("A[%d]: %d\n", i, A[i]);
+
+  printf("done\n");
 }
