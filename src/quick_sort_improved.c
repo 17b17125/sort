@@ -30,8 +30,8 @@ void quick_sort(int A[], int n){
     }
   }
   i = A[0];
-  A[0] = A[j-1];
-  A[j-1] = i;
+  A[0] = A[j-1-l];
+  A[j-1-l] = i;
   quick_sort(A, j-1-l);
   quick_sort(A+j, n-j);
   return;
